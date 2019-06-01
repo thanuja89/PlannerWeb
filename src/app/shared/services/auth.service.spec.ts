@@ -18,7 +18,7 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should do', inject(
+  it('should perform login', inject(
     [HttpTestingController, AuthService],
     (
       httpMock: HttpTestingController,
@@ -26,12 +26,17 @@ describe('AuthService', () => {
     ) => {
       const mockUser = new User('aaaaaa', 'user1', 'user1@aaa.com', 'ADA13SDWC4C');
 
-      authService.login('', '')
-        .subscribe(r => expect(r).toEqual(mockUser));
+      const spy = spyOn(localStorage, 'setItem');
+
+      authService.login('aa', 'pp')
+        .subscribe(r => { 
+          expect(r).toEqual(mockUser);
+          expect(spy).toHaveBeenCalledWith('currentUser', JSON.stringify(mockUser));
+        });
 
       const mockReq = httpMock.expectOne(`${environment.apiUrl}auth/CreateToken`);
       expect(mockReq.cancelled).toBeFalsy();
 
-      mockReq.flush(mockUser);
+      mockReq.flush(mockUser);     
     }));
 });
