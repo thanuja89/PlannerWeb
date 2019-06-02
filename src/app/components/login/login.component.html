@@ -1,8 +1,26 @@
-<form class="form">
+<form class="form" (ngSubmit)="onSubmit(f)" #f="ngForm">
     <mat-form-field>
-      <input ngModel name="username" matInput placeholder="Username" required>
+      <input
+        name="username"
+        placeholder="Username"
+        ngModel
+        matInput
+        required
+        pattern=".{4,}"
+        #un="ngModel">
+        <mat-error *ngIf="un.invalid">Username is not valid</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input ngModel name="password" matInput placeholder="Password" type="password" required pattern=".{4,}">
+      <input
+        name="password" matInput
+        placeholder="Password"
+        type="password"
+        required
+        pattern=".{4,}"
+        ngModel
+        #pass="ngModel">
+      <mat-hint>Min 4 characters</mat-hint>
+      <mat-error *ngIf="pass.invalid">Password is not valid</mat-error>
     </mat-form-field>
+    <button mat-button type="submit" [disabled]="f.invalid ">SignIn</button>
   </form>
