@@ -16,12 +16,12 @@ export class AuthService {
     map(u => !!u)
   );
 
-  constructor(private _httpClient: HttpClient) 
+  constructor(private httpClient: HttpClient) 
   { 
   }
 
   login(username: string, password: string){
-    return this._httpClient.post<User>(`${environment.apiUrl}auth/CreateToken`, { username, password })
+    return this.httpClient.post<User>(`${environment.apiUrl}auth/CreateToken`, { username, password })
             .pipe(
               map(user => {
                 // login successful if there's a jwt token in the response
