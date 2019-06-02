@@ -10,13 +10,14 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthService {
 
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser$: Observable<User>;
+  private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+  public currentUser$: Observable<User> = this.currentUserSubject.asObservable();
+  public isLoggedIn$: Observable<boolean> = this.currentUser$.pipe(
+    map(u => !!u)
+  );
 
   constructor(private _httpClient: HttpClient) 
   { 
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser$ = this.currentUserSubject.asObservable();
   }
 
   login(username: string, password: string){
@@ -32,5 +33,10 @@ export class AuthService {
 
                 return user;
             }));
+  }
+
+  logout(){
+    localStorage.setItem('currentUser', null);
+    this.currentUserSubject.next(null);
   }
 }

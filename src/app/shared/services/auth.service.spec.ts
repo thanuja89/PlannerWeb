@@ -38,6 +38,15 @@ describe('AuthService', () => {
           expect(u).toEqual(mockUser);
         });
 
+      authService.isLoggedIn$
+        .pipe(
+          skip(1),
+          take(1)
+        )
+        .subscribe(i => { 
+          expect(i).toEqual(true);
+        });
+
       authService.login('aa', 'pp')
         .subscribe(r => { 
           expect(r).toEqual(mockUser);
@@ -49,4 +58,36 @@ describe('AuthService', () => {
 
       mockReq.flush(mockUser);     
     }));
+
+    it('should perform logout', inject(
+      [HttpTestingController, AuthService],
+      (
+        httpMock: HttpTestingController,
+        authService: AuthService
+      ) => {
+  
+        const spy = spyOn(localStorage, 'setItem');
+  
+        authService.currentUser$
+          .pipe(
+            skip(1),
+            take(1)
+          )
+          .subscribe(u => { 
+            expect(u).toEqual(null);
+          });
+  
+        authService.isLoggedIn$
+          .pipe(
+            skip(1),
+            take(1)
+          )
+          .subscribe(i => { 
+            expect(i).toEqual(false);
+          });
+  
+        authService.logout();
+        
+        expect(spy).toHaveBeenCalledWith('currentUser', null);
+      }));
 });
