@@ -11,12 +11,12 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
 
   private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
+  public currentUser$: Observable<User>;
 
   constructor(private _httpClient: HttpClient) 
   { 
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+    this.currentUser$ = this.currentUserSubject.asObservable();
   }
 
   login(username: string, password: string){

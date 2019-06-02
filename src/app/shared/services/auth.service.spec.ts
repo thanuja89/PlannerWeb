@@ -3,6 +3,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
+import { skip, take } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 import { User } from '../models/user';
@@ -27,6 +28,15 @@ describe('AuthService', () => {
       const mockUser = new User('aaaaaa', 'user1', 'user1@aaa.com', 'ADA13SDWC4C');
 
       const spy = spyOn(localStorage, 'setItem');
+
+      authService.currentUser$
+        .pipe(
+          skip(1),
+          take(1)
+        )
+        .subscribe(u => { 
+          expect(u).toEqual(mockUser);
+        });
 
       authService.login('aa', 'pp')
         .subscribe(r => { 
